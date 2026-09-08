@@ -8,6 +8,7 @@ import { getSortingStrategy } from "../commands/plugin";
 import { Category, defaultProblem, ProblemState, SortingStrategy } from "../shared";
 import { shouldHideSolvedProblem } from "../utils/settingUtils";
 import { LeetCodeNode } from "./LeetCodeNode";
+import { hot100Groups, hot100RandomOrder } from "./hot100";
 
 class ExplorerNodeManager implements Disposable {
     private explorerNodeMap: Map<string, LeetCodeNode> = new Map<string, LeetCodeNode>();
@@ -31,8 +32,21 @@ class ExplorerNodeManager implements Disposable {
         }
     }
 
+    public getHot100Groups(): LeetCodeNode[] {
+        return hot100Groups.map((group, index) => new LeetCodeNode(Object.assign({}, defaultProblem, {
+            id: `Hot100.${index}`,
+            name: `${group.name} (${group.ids.length})`,
+        }), false));
+    }
+
     public getRootNodes(): LeetCodeNode[] {
         return [
+            new LeetCodeNode(Object.assign({}, defaultProblem, {
+                id: "Hot100", name: "热题 100",
+            }), false),
+            new LeetCodeNode(Object.assign({}, defaultProblem, {
+                id: "Hot100Random", name: "热题 100 · 随机顺序",
+            }), false),
             new LeetCodeNode(Object.assign({}, defaultProblem, {
                 id: Category.All,
                 name: Category.All,
@@ -121,6 +135,18 @@ class ExplorerNodeManager implements Disposable {
     }
 
     public getChildrenNodesById(id: string): LeetCodeNode[] {
+        if (id === "Hot100Random") {
+            return this.getHot100Nodes(hot100RandomOrder);
+        }
+        if (id === "Hot100") {
+            return this.getHot100Nodes(hot100Groups.reduce<string[]>((ids, group) => ids.concat(group.ids), []));
+        }
+        if (id.startsWith("Hot100.")) {
+            const index = id.slice("Hot100.".length);
+            const group = /^\d+$/.test(index) ? hot100Groups[Number(index)] : undefined;
+            return group ? this.getHot100Nodes(group.ids) : [];
+        }
+
         // The sub-category node's id is named as {Category.SubName}
         const metaInfo: string[] = id.split(".");
         const res: LeetCodeNode[] = [];
@@ -152,6 +178,12 @@ class ExplorerNodeManager implements Disposable {
         this.explorerNodeMap.clear();
         this.companySet.clear();
         this.tagSet.clear();
+    }
+
+    private getHot100Nodes(ids: readonly string[]): LeetCodeNode[] {
+        // Keep study order and reuse cached commands, status and hide-solved behavior.
+        return ids.map((id) => this.explorerNodeMap.get(id))
+            .filter((node): node is LeetCodeNode => node !== undefined);
     }
 
     private sortSubCategoryNodes(subCategoryNodes: LeetCodeNode[], category: Category): void {

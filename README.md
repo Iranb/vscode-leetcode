@@ -162,3 +162,18 @@ Refer to [CHANGELOG](https://github.com/LeetCode-OpenSource/vscode-leetcode/blob
 
 - This extension is based on [@skygragon](https://github.com/skygragon)'s [leetcode-cli](https://github.com/skygragon/leetcode-cli) open source project.
 - Special thanks to our [contributors](https://github.com/LeetCode-OpenSource/vscode-leetcode/blob/master/ACKNOWLEDGEMENTS.md).
+
+## Hot 100 in this fork
+
+The explorer adds **热题 100** (17 topic groups) and **热题 100 · 随机顺序**
+(a flat, saved shuffle of the same 100 problems). The official Chinese study plan
+snapshot was retrieved on September 8, 2026. Refreshing or restarting keeps the
+saved order. Both views reuse existing problem commands and acceptance status.
+`leetcode.hideSolved` applies; unavailable problems are omitted. Group labels show
+original group sizes, while tooltips count visible problems. General sorting does
+not override study order. No credentials or personal submission data are bundled.
+
+Run `npm ci`, `npm run compile`, and `npm run test:hot100`. Launch the extension
+using VS Code's extension development debugger. Edit `src/explorer/hot100.ts` to
+update the snapshot or saved shuffle; website updates are not synced automatically.
+The lockfile uses the official npm registry instead of expired mirror endpoints.

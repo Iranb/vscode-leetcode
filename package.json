@@ -713,6 +713,7 @@
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
+        "test:hot100": "npm run compile && node test/hot100.cjs",
         "watch": "tsc -watch -p ./",
         "lint": "tslint --project tsconfig.json -e src/*.d.ts -t verbose",
         "build": "vsce package",
