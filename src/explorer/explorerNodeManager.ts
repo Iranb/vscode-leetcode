@@ -45,7 +45,7 @@ class ExplorerNodeManager implements Disposable {
                 id: "Hot100", name: "热题 100",
             }), false),
             new LeetCodeNode(Object.assign({}, defaultProblem, {
-                id: "Hot100Random", name: "热题 100 · 随机顺序",
+                id: "Hot100Random", name: "热题 100 + 面试补充 · 随机顺序 (119)",
             }), false),
             new LeetCodeNode(Object.assign({}, defaultProblem, {
                 id: Category.All,

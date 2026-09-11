@@ -18,12 +18,14 @@ const plan = require('../out/src/explorer/hot100');
 const ids = plan.hot100Groups.flatMap(g => [...g.ids]);
 assert.equal(plan.hot100Groups.length, 17);
 assert.equal(ids.length, 100);
+assert.equal(plan.interviewSupplementIds.length, 19);
+assert.equal(new Set(plan.hot100RandomOrder).size, 119);
 assert.equal(new Set(ids).size, 100);
-assert.deepStrictEqual([...plan.hot100RandomOrder].sort(), [...ids].sort());
+assert.deepStrictEqual([...plan.hot100RandomOrder].sort(), [...ids, ...plan.interviewSupplementIds].sort());
 assert.notDeepStrictEqual([...plan.hot100RandomOrder], ids);
 let hide = false;
 let signedIn = true;
-const problems = [...ids, '999999'].map(id => ({ ...shared.defaultProblem, id, name: id,
+const problems = [...plan.hot100RandomOrder, '999999'].map(id => ({ ...shared.defaultProblem, id, name: id,
     state: id === '1' ? shared.ProblemState.AC : shared.ProblemState.Unknown }));
 const moduleManager = load('explorer/explorerNodeManager.js', {
     lodash: {}, '../commands/list': { listProblems: async () => problems },
@@ -34,6 +36,7 @@ const moduleManager = load('explorer/explorerNodeManager.js', {
 const manager = moduleManager.explorerNodeManager;
 const provider = load('explorer/LeetCodeTreeDataProvider.js', {
     os: require('os'), path, vscode, '../shared': shared,
+    'resources/interview/interview.js': { attach: () => {} },
     '../leetCodeManager': { leetCodeManager: { getUser: () => signedIn } },
     './explorerNodeManager': moduleManager, './LeetCodeNode': nodes,
     '../globalState': { globalState: { getUserStatus: () => ({}) } },
@@ -42,7 +45,7 @@ provider.initialize({ asAbsolutePath: x => x });
 (async () => {
     await manager.refreshCache();
     assert.equal(provider.getChildren().length, 7);
-    assert.equal(manager.getAllNodes().length, 101);
+    assert.equal(manager.getAllNodes().length, 120);
     const groups = provider.getChildren({ id: 'Hot100' });
     assert.equal(groups.length, 17);
     groups.forEach((g, i) => assert.deepStrictEqual(Array.from(provider.getChildren(g), n => n.id), [...plan.hot100Groups[i].ids]));
@@ -53,7 +56,7 @@ provider.initialize({ asAbsolutePath: x => x });
         assert.equal(provider.getTreeItem(n).command.command, 'leetcode.previewProblem');
         assert.strictEqual(provider.getTreeItem(n).command.arguments[0], n);
     }
-    assert(provider.getTreeItem({ id: 'Hot100Random', name: 'Random' }).tooltip.includes('Total: 100'));
+    assert(provider.getTreeItem({ id: 'Hot100Random', name: 'Random' }).tooltip.includes('Total: 119'));
     await manager.refreshCache();
     assert.deepStrictEqual(Array.from(shuffled(), n => n.id), [...plan.hot100RandomOrder]);
     hide = true;

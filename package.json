@@ -714,6 +714,8 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "test:hot100": "npm run compile && node test/hot100.cjs",
+        "test:interview": "node --check resources/interview/interview.js && node test/interview.cjs",
+        "test": "npm run test:hot100 && npm run test:interview",
         "watch": "tsc -watch -p ./",
         "lint": "tslint --project tsconfig.json -e src/*.d.ts -t verbose",
         "build": "vsce package",

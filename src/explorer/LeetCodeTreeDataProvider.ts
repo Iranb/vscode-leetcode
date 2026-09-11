@@ -21,6 +21,7 @@ export class LeetCodeTreeDataProvider implements vscode.TreeDataProvider<LeetCod
 
     public initialize(context: vscode.ExtensionContext): void {
         this.context = context;
+        require(context.asAbsolutePath("resources/interview/interview.js")).attach(this, context);
     }
 
     public async refresh(): Promise<void> {

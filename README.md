@@ -163,17 +163,35 @@ Refer to [CHANGELOG](https://github.com/LeetCode-OpenSource/vscode-leetcode/blob
 - This extension is based on [@skygragon](https://github.com/skygragon)'s [leetcode-cli](https://github.com/skygragon/leetcode-cli) open source project.
 - Special thanks to our [contributors](https://github.com/LeetCode-OpenSource/vscode-leetcode/blob/master/ACKNOWLEDGEMENTS.md).
 
-## Hot 100 in this fork
+## Interview practice in this fork
 
-The explorer adds **热题 100** (17 topic groups) and **热题 100 · 随机顺序**
-(a flat, saved shuffle of the same 100 problems). The official Chinese study plan
-snapshot was retrieved on September 8, 2026. Refreshing or restarting keeps the
-saved order. Both views reuse existing problem commands and acceptance status.
-`leetcode.hideSolved` applies; unavailable problems are omitted. Group labels show
-original group sizes, while tooltips count visible problems. General sorting does
-not override study order. No credentials or personal submission data are bundled.
+The LeetCode explorer provides:
 
-Run `npm ci`, `npm run compile`, and `npm run test:hot100`. Launch the extension
-using VS Code's extension development debugger. Edit `src/explorer/hot100.ts` to
-update the snapshot or saved shuffle; website updates are not synced automatically.
-The lockfile uses the official npm registry instead of expired mirror endpoints.
+- **热题 100**: the original 100 problems in 17 topic groups.
+- **热题 100 + 面试补充 · 随机顺序 (119)**: the original 100 plus 19 additional problems in a saved shuffled order. Refreshing does not reshuffle the list.
+- **岗位面试 · CV / ML / Agent Harness**: 100 question-and-answer cards and 20 coding exercises per track, totaling 300 Q&A cards and 60 coding exercises.
+
+The algorithm views reuse existing LeetCode nodes, commands and acceptance status.
+Hide-solved still applies; unavailable problems are omitted. Group labels show
+original sizes, while tooltips count visible problems. General sorting does not
+change study order. The official Hot 100 snapshot is from September 8, 2026.
+
+Interview Q&A cards open with basic answers and reading links. Coding exercises
+open Python templates with interface requirements and acceptance examples. Existing
+solutions are never overwritten. The **提交（预留，未接入判题）** CodeLens attempts to
+save the file and displays a placeholder notice: it does not upload, grade or mark
+solutions as accepted. These exercises are original practice, not company exam
+questions. Agent Harness covers execution, tools, state, permissions and evaluation.
+
+Coding files are stored in the extension's global storage under `interview-practice`.
+The interview bank remains accessible without a LeetCode login. Python, NumPy and
+PyTorch are not installed or executed automatically. No personal solutions,
+credentials or submission history are bundled.
+
+Run `npm ci`, `npm test` and `npm run lint`. Launch with VS Code's extension
+development debugger. `src/explorer/hot100.ts` contains algorithm IDs;
+`resources/interview/interview-bank.json` contains the local interview bank and
+`resources/interview/interview.js` its UI integration. The resources directory is
+included when packaging the extension. These static lists do not auto-sync online.
+
+See [the complete Chinese question bank](docs/interview-bank.md).
